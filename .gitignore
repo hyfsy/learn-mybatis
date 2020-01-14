@@ -1,8 +1,14 @@
+/target
+/.idea
+*.iml
+rebel.xml
+
 # Compiled class file
 *.class
 
 # Log file
 *.log
+/log
 
 # BlueJ files
 *.ctxt
