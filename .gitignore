@@ -2,13 +2,15 @@
 /.idea
 *.iml
 rebel.xml
+/log
+/webapp
+web.xml
 
 # Compiled class file
 *.class
 
 # Log file
 *.log
-/log
 
 # BlueJ files
 *.ctxt
