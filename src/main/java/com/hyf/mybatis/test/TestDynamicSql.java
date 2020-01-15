@@ -141,4 +141,31 @@ public class TestDynamicSql {
         }
     }
 
+    /**
+     * 如果为mysql环境，就获取到数据
+     * <p>
+     * 如果为oracle环境，就会返回null，因为我们mapper中的resultType的实体类字段与oracle的数据不匹配
+     */
+    @Test
+    public void testInnerParams() {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
+            UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+            User user = mapper.testInnerParams(1);
+            System.out.println(user);
+        }
+    }
+
+    /**
+     * 测试like绑定
+     *
+     * mapper 只能传入对象，并且绑定的属性要有 get set
+     */
+    @Test
+    public void testLikeBind() {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
+            UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+            List<User> user = mapper.testLikeBind(new User(100, "测", 100));
+            System.out.println(user);
+        }
+    }
 }

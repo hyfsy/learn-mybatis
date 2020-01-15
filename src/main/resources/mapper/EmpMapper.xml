@@ -26,10 +26,10 @@
                 select '002' ename,'job2' job from dual
            )
     -->
-    <insert id="insertBatchTestOracleTwo" parameterType="list" databaseId="oracle">
+    <insert id="insertBatchTestOracle" parameterType="list" databaseId="oracle">
         insert into emp (empno, ename, job)
           select emp_sequence.nextval, ename, job from
-              <foreach open="(" separator="union" close=")" collection="empList" item="emp">
+              <foreach open="(" separator="union" close=")" collection="list" item="emp">
                   select #{emp.eName} ename, #{emp.job} job from dual
               </foreach>
     </insert>
@@ -42,9 +42,9 @@
             insert into emp (empno, ename, job) values (emp_sequence.nextval,'测试多插3','多插job4');
         end;
     -->
-    <insert id="insertBatchTestOracle" parameterType="list" databaseId="oracle">
+    <insert id="insertBatchTestOracleTwo" parameterType="list" databaseId="oracle">
         begin
-        <foreach collection="list" item="emp">
+        <foreach collection="empList" item="emp">
             insert into emp (empno, ename, job) values
             --           此处结尾要加[;]
             <trim prefix="(" suffix=");" suffixOverrides=",">

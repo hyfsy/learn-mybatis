@@ -241,10 +241,9 @@
     </select>
 
     <!--foreach 扩展-->
-    <!-- oracle批量方式：语句用begin end;包含，最后一个语句也要[;] -->
     <!-- 扩展方式: mysql批量插入 -->
     <!--
-        insert into users (id, name, age, tid) values
+        insert into users (id, name, age) values
         (21,'多插名称21',21),
         (22,'多插名称22',22),
         (23,'多插名称23',23)
@@ -268,8 +267,8 @@
 
     <!-- 或整条语句用[;]分隔，url添加属性 allowMultiQueries=true -->
     <!--
-        insert into users (id, name, age, tid) values (21,'多插名称21',21);
-        insert into users (id, name, age, tid) values (21,'多插名称21',21);
+        insert into users (id, name, age) values (21,'多插名称21',21);
+        insert into users (id, name, age) values (21,'多插名称21',21);
     -->
     <insert id="insertBetchTestMysqlTwo" parameterType="list">
         <foreach separator=";" collection="list" item="user">
@@ -288,6 +287,29 @@
         </foreach>
     </insert>
 
+    <!-- 内置参数测试 -->
+    <select id="testInnerParams" resultType="user">
+        -- _databaseId 表示为当前数据库厂商的 我们自己起的别名
+        <if test="_databaseId == 'mysql'">
+            select * from users
+            -- _parameter 单个参数就是本身，多个参数则为 map对象
+            <if test="_parameter != null">
+                where id = #{_parameter}
+            </if>
+        </if>
+        <if test="_databaseId == 'oracle'">
+            select * from emp
+            <if test="_parameter != null">
+                where empno = #{_parameter}
+            </if>
+        </if>
+    </select>
+
+    <!-- bind标签 -->
+    <select id="testLikeBind" resultType="user">
+        <bind name="useLike" value="'%' + name + '%'" />
+        select * from users where name like #{useLike}
+    </select>
 
 
 </mapper>

@@ -1,6 +1,5 @@
 package com.hyf.mybatis.mapper;
 
-import com.hyf.mybatis.pojo.Teacher;
 import com.hyf.mybatis.pojo.User;
 import com.hyf.mybatis.pojo.UserTo;
 import org.apache.ibatis.annotations.MapKey;
@@ -71,5 +70,15 @@ public interface UserMapper {
 
     // foreach 批量操作
     int insertBetchTestMysql(List<User> userList);
+
     int insertBetchTestMysqlTwo(List<User> userList);
+
+
+    // 内置参数
+    User testInnerParams(Integer id);
+
+    // bind 标签
+    // 只能传入对象，并且绑定的属性要有get set
+    List<User> testLikeBind(User user);
+
 }
