@@ -1,20 +1,18 @@
 package com.hyf.mybatis.test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.ibatis.session.SqlSession;
-import org.junit.jupiter.api.Test;
-
 import com.hyf.mybatis.mapper.EmpMapper;
 import com.hyf.mybatis.mapper.UserMapper;
 import com.hyf.mybatis.pojo.Emp;
 import com.hyf.mybatis.pojo.User;
 import com.hyf.mybatis.util.MyBatisUtil;
+import org.apache.ibatis.session.SqlSession;
+import org.junit.jupiter.api.Test;
 
-public class TestDynamicSql
-{
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class TestDynamicSql {
 
     @Test
     public void testWhere_If() {
@@ -66,6 +64,11 @@ public class TestDynamicSql
         }
     }
 
+    /**
+     * mysql批量插入
+     * <p>
+     * 插入几条就返回几条
+     */
     @Test
     public void testForeachBetchInsertUseMysql() {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
@@ -78,24 +81,21 @@ public class TestDynamicSql
             }
             int size = mapper.insertBetchTestMysql(userList);
             System.out.println(size);
-
-            // 第二种mysql插入方式
-            userList.clear();
-            for (int i = 24; i < 28; i++) {
-                userList.add(new User(i, "多插名称" + i, i));
-            }
-            size = mapper.insertBetchTestMysqlTwo(userList);
-            System.out.println(size);
         }
     }
 
+    /**
+     * 第二种mysql插入方式
+     * <p>
+     * 只会返回 [1] 条修改
+     */
     @Test
     public void testForeachBetchInsertUseMysqlTwo() {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             UserMapper mapper = sqlSession.getMapper(UserMapper.class);
             // 第二种mysql插入方式
             List<User> userList = new ArrayList<>();
-            for (int i = 28; i < 30; i++) {
+            for (int i = 45; i < 47; i++) {
                 userList.add(new User(i, "多插名称" + i, i));
             }
             int size = mapper.insertBetchTestMysqlTwo(userList);
@@ -103,17 +103,42 @@ public class TestDynamicSql
         }
     }
 
+    /**
+     * 第一种oracle批量插入
+     * <p>
+     * 插入几条就返回几条
+     */
     @Test
-    public void testForeachBetchInsertUseOracle() {
+    public void testForeachBatchInsertUseOracleTwo() {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
+            EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
+            // 第二种oracle批量插入方式
+            List<Emp> empList = new ArrayList<>();
+            for (int i = 1; i < 4; i++) {
+                empList.add(new Emp(i, "第二种oracle多插名称" + i, i + ""));
+            }
+            int size = mapper.insertBatchTestOracleTwo(empList);
+            System.out.println(size);
+        }
+    }
+
+    /**
+     * 第二种oracle批量插入
+     * <p>
+     * 返回 [-1] 条修改
+     */
+    @Test
+    public void testForeachBatchInsertUseOracle() {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
             // oracle批量插入方式
             List<Emp> userList = new ArrayList<>();
-            for (int i = 28; i < 30; i++) {
+            for (int i = 34; i < 36; i++) {
                 userList.add(new Emp(i, "oracle多插名称" + i, i + ""));
             }
-            int size = mapper.insertBetchTestOracle(userList);
+            int size = mapper.insertBatchTestOracle(userList);
             System.out.println(size);
         }
     }
+
 }

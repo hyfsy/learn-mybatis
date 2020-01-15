@@ -17,7 +17,24 @@
     </insert>
 
     <!-- foreach 扩展 -->
-    <!-- oracle批量方式：语句用begin end;包含，最后一个语句也要[;] -->
+    <!-- oracle批量插入第一种 -->
+    <!--
+        insert into emp (empno, ename, job)
+            select emp_sequence.nextval, ename, job from (
+                select '001' ename,'job1' job from dual
+                union
+                select '002' ename,'job2' job from dual
+           )
+    -->
+    <insert id="insertBatchTestOracleTwo" parameterType="list" databaseId="oracle">
+        insert into emp (empno, ename, job)
+          select emp_sequence.nextval, ename, job from
+              <foreach open="(" separator="union" close=")" collection="empList" item="emp">
+                  select #{emp.eName} ename, #{emp.job} job from dual
+              </foreach>
+    </insert>
+
+    <!-- 第二种oracle批量方式：语句用begin end;包含，最后一个语句也要[;] -->
     <!--
         begin
             insert into emp (empno, ename, job) values (emp_sequence.nextval,'测试多插1','多插job1');
@@ -25,13 +42,13 @@
             insert into emp (empno, ename, job) values (emp_sequence.nextval,'测试多插3','多插job4');
         end;
     -->
-    <insert id="insertBetchTestOracle" parameterType="list" databaseId="oracle">
+    <insert id="insertBatchTestOracle" parameterType="list" databaseId="oracle">
         begin
         <foreach collection="list" item="emp">
             insert into emp (empno, ename, job) values
---           此处结尾要加[;]
+            --           此处结尾要加[;]
             <trim prefix="(" suffix=");" suffixOverrides=",">
-                  emp_sequence.nextval,
+                emp_sequence.nextval,
                 <if test="emp.eName != null and emp.eName.trim() != ''">
                     #{emp.eName},
                 </if>
@@ -40,8 +57,9 @@
                 </if>
             </trim>
         </foreach>
---      end结束也要加[;]
+        --      end结束也要加[;]
         end;
     </insert>
+
 
 </mapper>
