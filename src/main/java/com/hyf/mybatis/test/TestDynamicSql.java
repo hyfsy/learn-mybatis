@@ -168,4 +168,13 @@ public class TestDynamicSql {
             System.out.println(user);
         }
     }
+
+    @Test
+    public void testRefSql() {
+        try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
+            UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+            List<User> user = mapper.testRefSql();
+            System.out.println(user);
+        }
+    }
 }

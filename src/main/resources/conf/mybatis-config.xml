@@ -10,6 +10,7 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="lazyLoadingEnabled" value="true" />
         <setting name="aggressiveLazyLoading" value="false" />
+        <setting name="cacheEnabled" value="true" />
     </settings>
 
     <typeAliases>
@@ -60,6 +61,7 @@
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/TeacherMapper.xml"/>
         <mapper resource="mapper/EmpMapper.xml"/>
+        <mapper resource="mapper/UserCacheMapper.xml"/>
         <!-- 通配符匹配 -->
         <!--<mapper resource="mapper/*.xml"/>-->
         <!-- 引入网络或磁盘资源，有点问题 -->

@@ -307,9 +307,25 @@
 
     <!-- bind标签 -->
     <select id="testLikeBind" resultType="user">
-        <bind name="useLike" value="'%' + name + '%'" />
+        <bind name="useLike" value="'%' + name + '%'"/>
         select * from users where name like #{useLike}
     </select>
 
+    <!-- 测试sql引用 -->
+
+    <!-- 抽取常用sql -->
+    <sql id="user_field">
+        ${userId}, name, age
+    </sql>
+
+    <!-- 使用include标签引用sql -->
+    <!-- 在include内定义的property能在sql标签中用 ${} 使用 -->
+    <select id="testRefSql" resultType="user">
+        select
+        <include refid="user_field">
+            <property name="userId" value="id"></property>
+        </include>
+        from users
+    </select>
 
 </mapper>

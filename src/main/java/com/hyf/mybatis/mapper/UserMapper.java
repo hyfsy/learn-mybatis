@@ -81,4 +81,6 @@ public interface UserMapper {
     // 只能传入对象，并且绑定的属性要有get set
     List<User> testLikeBind(User user);
 
+    List<User> testRefSql();
+
 }
