@@ -5,6 +5,9 @@
 <!-- 名称空间，必须指定为对应接口的全类名 -->
 <mapper namespace="com.hyf.mybatis.mapper.TeacherMapper">
 
+    <!-- 引用其他namespace定义的缓存策略 -->
+    <cache-ref namespace="com.hyf.mybatis.mapper.UserCacheMapper" />
+
     <!-- 一对一查询使用 -->
     <select id="selectTeacherById" resultType="Teacher">
         select * from teacher where t_id = #{tid}

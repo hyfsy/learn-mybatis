@@ -25,11 +25,15 @@
                 blocking，阻塞的意思，使用BlockingCache会在查询缓存时锁住对应的Key，
                 如果缓存命中了则会释放对应的锁，否则会在查询数据库以后再释放锁这样可以阻止并发情况下多个线程同时查询数据
     -->
-    <cache eviction="LRU" flushInterval="60000" readOnly="true" size="1024" type="" blocking="false" />
+    <!--<cache eviction="LRU" flushInterval="60000" readOnly="true" size="1024" blocking="false" />-->
 
-
-
+    <!-- 使用ehcache缓存 -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+    
     <select id="testOneCache" resultType="USERCACHE">
         select * from users where id = #{id}
     </select>
+
+
+
 </mapper>
