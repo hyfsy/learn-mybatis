@@ -24,15 +24,22 @@
         <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
         <!-- 生成的pojo，将implements Serializable 使之能使用二级缓存 -->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <!-- 配置缓存的回收策略 -->
+        <plugin type="org.mybatis.generator.plugins.CachePlugin">
+            <property name="cache_eviction" value="LRU" />
+        </plugin>
         <commentGenerator>
-            <!--是否关闭注释-->
+            <!-- 是否关闭注释，默认false -->
             <property name="suppressAllComments" value="true"/>
-            <!--是否关闭时间标识-->
+            <!-- 是否关闭时间标识，默认false -->
             <property name="suppressDate" value="true"/>
+            <!-- 注释中添加数据库的注释，默认false -->
+            <property name="addRemarkComments" value="false" />
         </commentGenerator>
         <!-- 配置数据库驱动、链接URL、用户名、密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/learn"
+        <!-- 使用 mysql6.0+ 要在url中指定时区 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/learn?serverTimezone=UTC"
                         userId="root"
                         password="hyflearn">
         </jdbcConnection>
