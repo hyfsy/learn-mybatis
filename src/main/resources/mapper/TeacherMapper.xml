@@ -18,7 +18,7 @@
     <resultMap id="testCollection" type="teacher">
         <id column="t_id" property="tId" />
         <result column="t_name" property="tName" />
-        <!-- ofType: 指定集合的类型 -->
+        <!-- ofType: 指定集合中的对象类型 -->
         <collection property="userList" ofType="User">
             <id column="id" property="id" />
             <result column="name" property="name" />
