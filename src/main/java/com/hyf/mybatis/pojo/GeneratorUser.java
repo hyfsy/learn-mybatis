@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class GeneratorUser implements Serializable {
+
     private Integer userId;
 
     private Date userBirthday;
@@ -34,5 +35,14 @@ public class GeneratorUser implements Serializable {
 
     public void setUserSalary(Double userSalary) {
         this.userSalary = userSalary;
+    }
+
+    @Override
+    public String toString() {
+        return "GeneratorUser{" +
+                "userId=" + userId +
+                ", userBirthday=" + userBirthday +
+                ", userSalary=" + userSalary +
+                '}';
     }
 }

@@ -71,6 +71,7 @@
         <mapper resource="mapper/TeacherMapper.xml"/>
         <mapper resource="mapper/EmpMapper.xml"/>
         <mapper resource="mapper/UserCacheMapper.xml"/>
+        <mapper resource="mapper/GeneratorUserMapper.xml" />
         <!-- 通配符匹配 -->
         <!--<mapper resource="mapper/*.xml"/>-->
         <!-- 引入网络或磁盘资源，有点问题 -->
