@@ -34,4 +34,8 @@ public class MyBatisUtil {
     public static SqlSession getSqlSession(boolean isAutoCommit) {
         return sqlSessionFactory.openSession(isAutoCommit);
     }
+
+    public static SqlSessionFactory getSqlSessionFactory() {
+        return sqlSessionFactory;
+    }
 }

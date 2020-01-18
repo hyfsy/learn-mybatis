@@ -4,7 +4,7 @@
 <configuration>
     <!-- 绑定properties文件，方便下方引用 -->
     <properties resource="jdbc.properties" />
-    
+
     <settings>
         <!-- 映射数据库的字段为驼峰命名 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
@@ -19,6 +19,18 @@
         <!-- 为整个包下的所有类起别名，如果冲突，可用@Alias注解指定新的别名 -->
         <package name="com.hyf.mybatis.pojo" />
     </typeAliases>
+
+    <!-- 注册多个自定义插件 -->
+    <plugins>
+        <!--<plugin interceptor="com.hyf.mybatis.plugin.OrderInterceptor">-->
+            <!--<property name="name" value="orderPlugin" />-->
+            <!--<property name="testValue" value="1" />-->
+        <!--</plugin>-->
+        <!--<plugin interceptor="com.hyf.mybatis.plugin.TestInterceptor" />-->
+        
+        <!-- 注册分页插件 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor" />
+    </plugins>
 
     <!-- default用来切换数据源，为对应环境的id -->
     <environments default="learn_mysql">
