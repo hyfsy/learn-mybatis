@@ -83,4 +83,7 @@ public interface UserMapper {
 
     List<User> testRefSql();
 
+    //测试自定义类型处理器
+    int testInsertEnumTypeHandler(User user);
+
 }

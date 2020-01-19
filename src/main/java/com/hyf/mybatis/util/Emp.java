@@ -1,4 +1,4 @@
-package com.hyf.mybatis.pojo;
+package com.hyf.mybatis.util;
 
 /**
  * oracle测试实体

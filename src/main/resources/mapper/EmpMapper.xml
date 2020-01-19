@@ -62,4 +62,50 @@
     </insert>
 
 
+    <!-- =============================测试oracle存储过程===================================== -->
+
+
+    <resultMap id="testProcedure" type="emp">
+        <id column="empno" property="eNo" />
+        <result column="ename" property="eName" />
+        <result column="job" property="job" />
+    </resultMap>
+
+    <!-- 过期了照样用，其实也可以在#{}中指定 -->
+    <!--<parameterMap id="testProcedureParamMap" type="emp_page">-->
+        <!--<parameter property="startPage" mode="IN" jdbcType="INTEGER" />-->
+        <!--<parameter property="endPage" mode="IN" jdbcType="INTEGER" />-->
+        <!--<parameter property="totalPage" mode="OUT" jdbcType="INTEGER" />-->
+        <!--<parameter property="empList" mode="OUT" javaType="ResultSet" resultMap="testProcedure" />-->
+    <!--</parameterMap>-->
+
+    <!--&lt;!&ndash; 测试存储过程，使用 parameterMap &ndash;&gt;-->
+    <!--<select id="callProcedureSelectEmpListUsePage" parameterMap="testProcedureParamMap" statementType="CALLABLE" databaseId="oracle">-->
+        <!--call emp_split_page_procedure(-->
+            <!--#{startPage},-->
+            <!--#{endPage},-->
+            <!--#{totalPage},-->
+            <!--#{empList}-->
+        <!--)-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash; 测试存储过程，不使用 parameterMap &ndash;&gt;-->
+    <!--<select id="callProcedureSelectEmpListUsePage2" statementType="CALLABLE" databaseId="oracle">-->
+        <!--{call emp_split_page_procedure(-->
+            <!--#{startPage , mode = IN   , jdbcType = INTEGER},-->
+            <!--#{endPage   , mode = IN   , jdbcType = INTEGER},-->
+            <!--#{totalPage , mode = OUT  , jdbcType = INTEGER},-->
+            <!--#{empList   , mode = OUT  , jdbcType = CURSOR, javaType = ResultSet, resultMap = testProcedure}-->
+        <!--)}-->
+    <!--</select>-->
+
+    <select id="callProcedureSelectEmpListUsePage3" statementType="CALLABLE" databaseId="oracle">
+        {call hello_test(
+            #{start , mode = IN   , jdbcType = INTEGER},
+            #{end   , mode = IN   , jdbcType = INTEGER},
+            #{total , mode = OUT  , jdbcType = INTEGER},
+            #{emps  , mode = OUT  , jdbcType = CURSOR, javaType = ResultSet, resultMap = testProcedure}
+        )}
+    </select>
+
 </mapper>

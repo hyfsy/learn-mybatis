@@ -6,8 +6,9 @@
 <mapper namespace="com.hyf.mybatis.mapper.UserMapper">
 
     <!-- id，用来指定对应命名空间的接口的方法 -->
+    <!-- sql语句最后的 [;] 可加可不加 -->
     <select id="selectUserById" resultType="user" databaseId="mysql">
-        select * from users where id = #{id}
+        select * from users where id = #{id};
     </select>
 
     <!-- 查询 -->
@@ -18,7 +19,7 @@
     <!--插入-->
     <insert id="insertUser" parameterType="com.hyf.mybatis.pojo.User" databaseId="mysql"
             useGeneratedKeys="true" keyProperty="id">
-        insert into users (name, age) values(#{name}, #{age})
+        insert into users (name, age) valu】es(#{name}, #{age})
     </insert>
 
     <!--更新-->
@@ -327,5 +328,12 @@
         </include>
         from users
     </select>
+
+
+    <!-- =============================测试自定义枚举类型转换器============================= -->
+
+    <insert id="testInsertEnumTypeHandler" parameterType="user">
+        insert into users (name, age, activity) values (#{name}, #{age}, #{activity})
+    </insert>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.hyf.mybatis.pojo;
 
+import com.hyf.mybatis.typehandler.UserStatusEnum;
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -11,6 +12,7 @@ public class User {
     private String name;
     private Integer age;
     private Teacher teacher;
+    private UserStatusEnum activity;
 
     public User() {}
 
@@ -52,6 +54,14 @@ public class User {
         this.teacher = teacher;
     }
 
+    public UserStatusEnum getActivity() {
+        return activity;
+    }
+
+    public void setActivity(UserStatusEnum activity) {
+        this.activity = activity;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -59,6 +69,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", teacher=" + teacher +
+                ", activity=" + activity +
                 '}';
     }
 }

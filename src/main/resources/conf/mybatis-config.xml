@@ -3,33 +3,39 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <!-- 绑定properties文件，方便下方引用 -->
-    <properties resource="jdbc.properties" />
+    <properties resource="jdbc.properties"/>
 
     <settings>
         <!-- 映射数据库的字段为驼峰命名 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
-        <setting name="lazyLoadingEnabled" value="true" />
-        <setting name="aggressiveLazyLoading" value="false" />
-        <setting name="cacheEnabled" value="true" />
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 
     <typeAliases>
         <!-- 为某一个类起别名 -->
-        <typeAlias type="com.hyf.mybatis.pojo.User" alias="user" />
+        <typeAlias type="com.hyf.mybatis.pojo.PageEmp" alias="emp_page"/>
         <!-- 为整个包下的所有类起别名，如果冲突，可用@Alias注解指定新的别名 -->
-        <package name="com.hyf.mybatis.pojo" />
+        <package name="com.hyf.mybatis.pojo"/>
     </typeAliases>
+
+    <typeHandlers>
+        <!-- 处理指定java类型时使用指定类型处理器 -->
+        <!-- jdbcType 也可以在处理指定jdbcType时，使用指定处理器 -->
+        <typeHandler handler="com.hyf.mybatis.typehandler.EnumTypeHandler" javaType="com.hyf.mybatis.typehandler.UserStatusEnum"/>
+    </typeHandlers>
 
     <!-- 注册多个自定义插件 -->
     <plugins>
         <!--<plugin interceptor="com.hyf.mybatis.plugin.OrderInterceptor">-->
-            <!--<property name="name" value="orderPlugin" />-->
-            <!--<property name="testValue" value="1" />-->
+        <!--<property name="name" value="orderPlugin" />-->
+        <!--<property name="testValue" value="1" />-->
         <!--</plugin>-->
         <!--<plugin interceptor="com.hyf.mybatis.plugin.TestInterceptor" />-->
-        
+
         <!-- 注册分页插件 -->
-        <plugin interceptor="com.github.pagehelper.PageInterceptor" />
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
     </plugins>
 
     <!-- default用来切换数据源，为对应环境的id -->
@@ -71,9 +77,9 @@
 
     <!-- 为数据库厂商指定别名 -->
     <databaseIdProvider type="DB_VENDOR">
-        <property name="MySQL" value="mysql" />
-        <property name="Oracle" value="oracle" />
-        <property name="SQL Server" value="sqlserver" />
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="SQL Server" value="sqlserver"/>
     </databaseIdProvider>
 
     <!-- 扫描对应的mapper文件 -->
@@ -83,7 +89,7 @@
         <mapper resource="mapper/TeacherMapper.xml"/>
         <mapper resource="mapper/EmpMapper.xml"/>
         <mapper resource="mapper/UserCacheMapper.xml"/>
-        <mapper resource="mapper/GeneratorUserMapper.xml" />
+        <mapper resource="mapper/GeneratorUserMapper.xml"/>
         <!-- 通配符匹配 -->
         <!--<mapper resource="mapper/*.xml"/>-->
         <!-- 引入网络或磁盘资源，有点问题 -->
