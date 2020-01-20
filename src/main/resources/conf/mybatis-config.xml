@@ -20,12 +20,16 @@
         <package name="com.hyf.mybatis.pojo"/>
     </typeAliases>
 
-    <typeHandlers>
-        <!-- 处理指定java类型时使用指定类型处理器 -->
-        <!-- jdbcType 也可以在处理指定jdbcType时，使用指定处理器 -->
-        <!-- javaType 和 jdbcType 也都可以使用注解的方式配置 -->
-        <typeHandler handler="com.hyf.mybatis.typehandler.EnumTypeHandler" javaType="com.hyf.mybatis.typehandler.UserStatusEnum"/>
-    </typeHandlers>
+    <!-- 配置自定义类型处理器 -->
+    <!--<typeHandlers>-->
+        <!--&lt;!&ndash; 处理指定java类型时使用指定类型处理器 &ndash;&gt;-->
+        <!--&lt;!&ndash; jdbcType 也可以在处理指定jdbcType时，使用指定处理器 &ndash;&gt;-->
+        <!--&lt;!&ndash; javaType 和 jdbcType 也都可以使用注解的方式配置 &ndash;&gt;-->
+        <!--&lt;!&ndash;<typeHandler handler="com.hyf.mybatis.typehandler.EnumTypeHandler" javaType="com.hyf.mybatis.typehandler.UserStatusEnum"/>&ndash;&gt;-->
+    <!--</typeHandlers>-->
+
+    <!-- 配置自定义对象工厂 -->
+    <objectFactory type="com.hyf.mybatis.objectfactory.CustomObjectFactory" />
 
     <!-- 注册多个自定义插件 -->
     <plugins>
@@ -95,6 +99,10 @@
         <mapper resource="mapper/EmpMapper.xml"/>
         <mapper resource="mapper/UserCacheMapper.xml"/>
         <mapper resource="mapper/GeneratorUserMapper.xml"/>
+
+        <!-- 配置注解扫描 -->
+        <mapper class="com.hyf.mybatis.anno.UserAnnMapper" />
+        <mapper class="com.hyf.mybatis.anno.TeacherAnnMapper" />
         <!-- 通配符匹配 -->
         <!--<mapper resource="mapper/*.xml"/>-->
         <!--

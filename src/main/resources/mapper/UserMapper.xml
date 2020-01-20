@@ -332,6 +332,12 @@
 
     <!-- =============================测试自定义枚举类型转换器============================= -->
 
+    <!-- 测试了解用 -->
+    <!--<resultMap id="testTypeHandlerMap" type="user">-->
+        <!--<result column="activity" property="activity" typeHandler="com.hyf.mybatis.typehandler.EnumTypeHandler" />-->
+    <!--</resultMap>-->
+    <!-- , typeHandler=com.hyf.mybatis.typehandler.EnumTypeHandler -->
+
     <insert id="testInsertEnumTypeHandler" parameterType="user">
         insert into users (name, age, activity) values (#{name}, #{age}, #{activity})
     </insert>
