@@ -23,6 +23,7 @@
     <typeHandlers>
         <!-- 处理指定java类型时使用指定类型处理器 -->
         <!-- jdbcType 也可以在处理指定jdbcType时，使用指定处理器 -->
+        <!-- javaType 和 jdbcType 也都可以使用注解的方式配置 -->
         <typeHandler handler="com.hyf.mybatis.typehandler.EnumTypeHandler" javaType="com.hyf.mybatis.typehandler.UserStatusEnum"/>
     </typeHandlers>
 
@@ -52,9 +53,9 @@
             <!-- 数据库连接池，为mybatis自带的，type指定使用什么类型的连接池：[UNPOOLED|POOLED|JNDI] -->
             <!-- 自定义数据源：实现DataSourceFactory接口，type为类的全类名  -->
             <!--
-                UNPOOLED: 无数据库连接池
-                POOLED: 有数据库连接池
-                JNDI: 自定义数据源
+                UNPOOLED: 无数据库连接池 采用传统获取连接的方式，虽然实现了DataSource接口，但没有池的概念
+                POOLED: 有数据库连接池 采用传统的连接池，实现了DataSource接口，MyBatis中有针对的实现
+                JNDI: 自定义数据源 采用服务器提供的JNDI技术支持，比如tomcat服务器采用的就是dbcp连接池
             -->
             <dataSource type="POOLED">
                 <property name="driver" value="${jdbc.mysql.driver}"/>
@@ -62,6 +63,10 @@
                 <property name="username" value="${jdbc.mysql.username}"/>
                 <property name="password" value="${jdbc.mysql.password}"/>
             </dataSource>
+            <!-- 定义JNDI数据源 -->
+            <!--<dataSource type="JNDI">-->
+                <!--<property name="datasource-jndi" value="java:comp/env/jdbc/jdbc-jndi" />-->
+            <!--</dataSource>-->
         </environment>
         <!-- oracle -->
         <environment id="learn_oracle">
@@ -92,8 +97,15 @@
         <mapper resource="mapper/GeneratorUserMapper.xml"/>
         <!-- 通配符匹配 -->
         <!--<mapper resource="mapper/*.xml"/>-->
-        <!-- 引入网络或磁盘资源，有点问题 -->
-        <!--<mapper url="file://E://study/idea2/learn-mybatis/src/main/resources/mapper/UserMapper.xml" />-->
+        <!--
+            url: 引入网络或磁盘资源
+            写法：http://localhost:8080/test
+                协议      主机      端口  uri
+
+            URL: Uniform Resource Locator       统一资源定位符
+            URI: Uniform Resource Identifier    统一资源标识符
+         -->
+        <!--<mapper url="file:///E://study/idea2/learn-mybatis/src/main/resources/mapper/UserMapper.xml" />-->
         <!-- 引入接口文件 -->
         <!-- 有sql映射文件：接口和xml必须在同一个路径下 -->
         <!-- 没有sql映射文件：所有sql必须利用注解写在接口中 -->

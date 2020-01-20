@@ -1,7 +1,6 @@
 package com.hyf.mybatis.typehandler;
 
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -13,6 +12,7 @@ import java.sql.SQLException;
 /**
  * 自定义枚举类型处理器
  */
+//@MappedTypes(UserStatusEnum.class)
 public class EnumTypeHandler implements TypeHandler<UserStatusEnum> {
 
     /**
