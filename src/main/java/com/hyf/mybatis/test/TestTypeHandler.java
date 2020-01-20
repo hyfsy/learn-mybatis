@@ -16,7 +16,7 @@ public class TestTypeHandler {
      */
     @Test
     public void testEnumTypeHandler() {
-        User user = new User(null, "测试枚举类型转换", 49);
+        UserAndEnum user = new UserAndEnum(null, "测试枚举类型转换", 49);
         user.setActivity(UserStatusEnum.PLAY);
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             UserMapper mapper = sqlSession.getMapper(UserMapper.class);

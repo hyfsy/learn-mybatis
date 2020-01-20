@@ -2,6 +2,7 @@ package com.hyf.mybatis.mapper;
 
 import com.hyf.mybatis.pojo.User;
 import com.hyf.mybatis.pojo.UserTo;
+import com.hyf.mybatis.test.UserAndEnum;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
@@ -84,6 +85,6 @@ public interface UserMapper {
     List<User> testRefSql();
 
     //测试自定义类型处理器
-    int testInsertEnumTypeHandler(User user);
+    int testInsertEnumTypeHandler(UserAndEnum user);
 
 }

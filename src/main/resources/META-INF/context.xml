@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-
+<Context>
 <!-- JNDI java naming and directory interface Java命名和目录接口 -->
 <Resource name="jdbc-jndi"
           type="javax.sql.DataSource"
@@ -24,3 +24,4 @@
             驱动类
             连接url
         -->
+</Context>

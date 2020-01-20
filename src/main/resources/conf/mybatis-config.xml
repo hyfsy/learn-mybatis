@@ -61,16 +61,17 @@
                 POOLED: 有数据库连接池 采用传统的连接池，实现了DataSource接口，MyBatis中有针对的实现
                 JNDI: 自定义数据源 采用服务器提供的JNDI技术支持，比如tomcat服务器采用的就是dbcp连接池
             -->
-            <dataSource type="POOLED">
-                <property name="driver" value="${jdbc.mysql.driver}"/>
-                <property name="url" value="${jdbc.mysql.url}"/>
-                <property name="username" value="${jdbc.mysql.username}"/>
-                <property name="password" value="${jdbc.mysql.password}"/>
-            </dataSource>
-            <!-- 定义JNDI数据源 -->
-            <!--<dataSource type="JNDI">-->
-                <!--<property name="datasource-jndi" value="java:comp/env/jdbc/jdbc-jndi" />-->
+            <!--<dataSource type="POOLED">-->
+                <!--<property name="driver" value="${jdbc.mysql.driver}"/>-->
+                <!--<property name="url" value="${jdbc.mysql.url}"/>-->
+                <!--<property name="username" value="${jdbc.mysql.username}"/>-->
+                <!--<property name="password" value="${jdbc.mysql.password}"/>-->
             <!--</dataSource>-->
+            <!-- 定义JNDI数据源 -->
+            <dataSource type="JNDI">
+                <!-- 随便指定一个名称，value前面固定，后面为文件名称，文件要放在指定路径下(META-INF) -->
+                <property name="data_source" value="java:comp/env/jdbc-jndi" />
+            </dataSource>
         </environment>
         <!-- oracle -->
         <environment id="learn_oracle">

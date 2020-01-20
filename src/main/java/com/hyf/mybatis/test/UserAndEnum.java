@@ -1,21 +1,18 @@
-package com.hyf.mybatis.pojo;
+package com.hyf.mybatis.test;
 
+import com.hyf.mybatis.pojo.Teacher;
 import com.hyf.mybatis.typehandler.UserStatusEnum;
-import org.apache.ibatis.type.Alias;
 
-/**
- * mysql测试用户类
- */
-@Alias("user")
-public class User {
+public class UserAndEnum {
     private Integer id;
     private String name;
     private Integer age;
     private Teacher teacher;
+    private UserStatusEnum activity;
 
-    public User() {}
+    public UserAndEnum() {}
 
-    public User(Integer id, String name, Integer age) {
+    public UserAndEnum(Integer id, String name, Integer age) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -53,6 +50,14 @@ public class User {
         this.teacher = teacher;
     }
 
+    public UserStatusEnum getActivity() {
+        return activity;
+    }
+
+    public void setActivity(UserStatusEnum activity) {
+        this.activity = activity;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -60,6 +65,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", teacher=" + teacher +
+                ", activity=" + activity +
                 '}';
     }
 }
