@@ -6,7 +6,7 @@ import java.util.List;
 public class PageEmp {
     private int start;
     private int end;
-    private int count;
+    private int total = 1;
     private List<Emp> emps = new ArrayList<>();
 
     public PageEmp(int start, int end) {
@@ -31,11 +31,11 @@ public class PageEmp {
     }
 
     public int getCount() {
-        return count;
+        return total;
     }
 
     public void setCount(int count) {
-        this.count = count;
+        this.total = count;
     }
 
     public List<Emp> getEmps() {
@@ -51,7 +51,7 @@ public class PageEmp {
         return "PageEmp{" +
                 "start=" + start +
                 ", end=" + end +
-                ", count=" + count +
+                ", count=" + total +
                 ", emps=" + emps +
                 '}';
     }

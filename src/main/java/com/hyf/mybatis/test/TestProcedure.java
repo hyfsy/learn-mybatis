@@ -13,6 +13,7 @@ public class TestProcedure {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             // 查询第二条到第四条的数据
             PageEmp pageEmp = new PageEmp(2, 4);
+            System.out.println(pageEmp);
             EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
             mapper.callProcedureSelectEmpListUsePage3(pageEmp);
             System.out.println(pageEmp);

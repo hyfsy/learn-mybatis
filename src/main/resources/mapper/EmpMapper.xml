@@ -99,7 +99,7 @@
         <!--)}-->
     <!--</select>-->
 
-    <select id="callProcedureSelectEmpListUsePage3" statementType="CALLABLE" databaseId="oracle">
+    <select id="callProcedureSelectEmpListUsePage3" resultType="emp_page" statementType="CALLABLE" databaseId="oracle">
         {call hello_test(
             #{start , mode = IN   , jdbcType = INTEGER},
             #{end   , mode = IN   , jdbcType = INTEGER},
