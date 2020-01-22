@@ -70,7 +70,7 @@ public class TestDynamicSql {
      * 插入几条就返回几条
      */
     @Test
-    public void testForeachBetchInsertUseMysql() {
+    public void testForeachBatchInsertUseMysql() {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             UserMapper mapper = sqlSession.getMapper(UserMapper.class);
 
@@ -79,7 +79,7 @@ public class TestDynamicSql {
             for (int i = 21; i < 24; i++) {
                 userList.add(new User(i, "多插名称" + i, i));
             }
-            int size = mapper.insertBetchTestMysql(userList);
+            int size = mapper.insertBatchTestMysql(userList);
             System.out.println(size);
         }
     }
@@ -90,7 +90,7 @@ public class TestDynamicSql {
      * 只会返回 [1] 条修改
      */
     @Test
-    public void testForeachBetchInsertUseMysqlTwo() {
+    public void testForeachBatchInsertUseMysqlTwo() {
         try (SqlSession sqlSession = MyBatisUtil.getSqlSession()) {
             UserMapper mapper = sqlSession.getMapper(UserMapper.class);
             // 第二种mysql插入方式
@@ -98,7 +98,7 @@ public class TestDynamicSql {
             for (int i = 45; i < 47; i++) {
                 userList.add(new User(i, "多插名称" + i, i));
             }
-            int size = mapper.insertBetchTestMysqlTwo(userList);
+            int size = mapper.insertBatchTestMysqlTwo(userList);
             System.out.println(size);
         }
     }

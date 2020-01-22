@@ -237,7 +237,7 @@
         -- item 集合中每个值的映射
         -- collection 集合的映射(自动封装为map的key 为 collection/list)
         <foreach open="(" separator="," close=")" index="i" item="id" collection="idList">
-            #{id}
+            #{id} + #{i}
         </foreach>
     </select>
 

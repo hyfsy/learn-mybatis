@@ -61,20 +61,20 @@
                 POOLED: 有数据库连接池 采用传统的连接池，实现了DataSource接口，MyBatis中有针对的实现
                 JNDI: 自定义数据源 采用服务器提供的JNDI技术支持，比如tomcat服务器采用的就是dbcp连接池
             -->
-            <!--<dataSource type="POOLED">-->
-                <!--<property name="driver" value="${jdbc.mysql.driver}"/>-->
-                <!--<property name="url" value="${jdbc.mysql.url}"/>-->
-                <!--<property name="username" value="${jdbc.mysql.username}"/>-->
-                <!--<property name="password" value="${jdbc.mysql.password}"/>-->
-            <!--</dataSource>-->
-            <!-- 定义JNDI数据源 -->
-            <dataSource type="JNDI">
-                <!--
-                    name必须指定为data_source，具体看JndiDataSourceFactory的源码
-                    value前面的'java:comp/env/'固定，后面为context文件中配置的resource的名称
-                -->
-                <property name="data_source" value="java:comp/env/jdbc-jndi" />
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.mysql.driver}"/>
+                <property name="url" value="${jdbc.mysql.url}"/>
+                <property name="username" value="${jdbc.mysql.username}"/>
+                <property name="password" value="${jdbc.mysql.password}"/>
             </dataSource>
+            <!-- 定义JNDI数据源 -->
+            <!--<dataSource type="JNDI">-->
+                <!--&lt;!&ndash;-->
+                    <!--name必须指定为data_source，具体看JndiDataSourceFactory的源码-->
+                    <!--value前面的'java:comp/env/'固定，后面为context文件中配置的resource的名称-->
+                <!--&ndash;&gt;-->
+                <!--<property name="data_source" value="java:comp/env/jdbc-jndi" />-->
+            <!--</dataSource>-->
         </environment>
         <!-- oracle -->
         <environment id="learn_oracle">

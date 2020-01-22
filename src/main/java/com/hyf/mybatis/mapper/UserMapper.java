@@ -70,9 +70,9 @@ public interface UserMapper {
     List<User> selectUserListTestForEach(@Param("idList") List<Integer> idList);
 
     // foreach 批量操作
-    int insertBetchTestMysql(List<User> userList);
+    int insertBatchTestMysql(List<User> userList);
 
-    int insertBetchTestMysqlTwo(List<User> userList);
+    int insertBatchTestMysqlTwo(List<User> userList);
 
 
     // 内置参数
