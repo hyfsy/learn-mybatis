@@ -69,7 +69,10 @@
             <!--</dataSource>-->
             <!-- 定义JNDI数据源 -->
             <dataSource type="JNDI">
-                <!-- 随便指定一个名称，value前面固定，后面为文件名称，文件要放在指定路径下(META-INF) -->
+                <!--
+                    name必须指定为data_source，具体看JndiDataSourceFactory的源码
+                    value前面的'java:comp/env/'固定，后面为context文件中配置的resource的名称
+                -->
                 <property name="data_source" value="java:comp/env/jdbc-jndi" />
             </dataSource>
         </environment>
