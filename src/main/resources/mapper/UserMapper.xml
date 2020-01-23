@@ -19,7 +19,7 @@
     <!--插入-->
     <insert id="insertUser" parameterType="com.hyf.mybatis.pojo.User" databaseId="mysql"
             useGeneratedKeys="true" keyProperty="id">
-        insert into users (name, age) valu】es(#{name}, #{age})
+        insert into users (name, age) values(#{name}, #{age})
     </insert>
 
     <!--更新-->
@@ -77,6 +77,17 @@
 
     <!-- 使用 resultMap ,将返回结果封装到指定类型对象的指定属性中 -->
     <resultMap id="testUserMax" type="USER">
+        <!--
+            构造函数生成结果对象，此处为 new User(id, name, age)
+            3.4.3后，声明顺序可以不与构造函数的参数顺序一致
+                通过name属性指定构造函数的签名参数即可
+            javaType此处不显示指定也可以
+        -->
+        <constructor>
+            <idArg column="uid" javaType="int" name="id" />
+            <arg column="user_name" javaType="String" name="name" />
+            <arg column="u_age" javaType="int" name="age" />
+        </constructor>
         <!--
             定义主键的封装规则
             id定义主键，底层会有优化

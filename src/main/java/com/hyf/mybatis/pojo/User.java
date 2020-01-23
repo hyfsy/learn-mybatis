@@ -1,6 +1,5 @@
 package com.hyf.mybatis.pojo;
 
-import com.hyf.mybatis.typehandler.UserStatusEnum;
 import org.apache.ibatis.type.Alias;
 
 /**
