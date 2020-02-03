@@ -8,7 +8,23 @@
     <!-- id，用来指定对应命名空间的接口的方法 -->
     <!-- sql语句最后的 [;] 可加可不加 -->
     <select id="selectUserById" resultType="user" databaseId="mysql">
-        select * from users where id = #{id};
+        select * from users where id = #{id}
+    </select>
+
+    <!-- 测试源码解析标签 -->
+    <select id="selectUserById1" resultType="user" databaseId="mysql">
+        <bind name="idLike" value="'%' + id + '%'"/>
+        select
+        <include refid="user_field" >
+            <property name="userId" value="nb" />
+        </include>
+        from users where id = #{id} and  id = ${asdf}
+        <trim suffixOverrides="and">
+            <if test="id != ''">
+                and id = 23 and
+            </if>
+        </trim>
+        and id = #{idLike};
     </select>
 
     <!-- 查询 -->
@@ -83,11 +99,11 @@
                 通过name属性指定构造函数的签名参数即可
             javaType此处不显示指定也可以
         -->
-        <constructor>
-            <idArg column="uid" javaType="int" name="id" />
-            <arg column="user_name" javaType="String" name="name" />
-            <arg column="u_age" javaType="int" name="age" />
-        </constructor>
+        <!--<constructor>-->
+            <!--<idArg column="uid" javaType="int" name="id" />-->
+            <!--<arg column="user_name" javaType="String" name="name" />-->
+            <!--<arg column="u_age" javaType="int" name="age" />-->
+        <!--</constructor>-->
         <!--
             定义主键的封装规则
             id定义主键，底层会有优化
@@ -260,7 +276,7 @@
         (22,'多插名称22',22),
         (23,'多插名称23',23)
     -->
-    <insert id="insertBetchTestMysql" parameterType="list">
+    <insert id="insertBatchTestMysql" parameterType="list">
         insert into users (id, name, age) values
         <foreach separator="," collection="list" item="user">
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -282,7 +298,7 @@
         insert into users (id, name, age) values (21,'多插名称21',21);
         insert into users (id, name, age) values (21,'多插名称21',21);
     -->
-    <insert id="insertBetchTestMysqlTwo" parameterType="list">
+    <insert id="insertBatchTestMysqlTwo" parameterType="list">
         <foreach separator=";" collection="list" item="user">
             insert into users (id, name, age) values
             <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -44,7 +44,7 @@
     </plugins>
 
     <!-- default用来切换数据源，为对应环境的id -->
-    <environments default="learn_oracle">
+    <environments default="learn_mysql">
         <!-- 一个个具体的环境信息，id为当前环境的唯一标识 -->
         <environment id="learn_mysql">
             <!-- 事务管理器，type指定使用哪个事务：[JDBC|MANAGED] ——— 这两个都是别名，在Configuration类中可以查看具体类 -->
