@@ -26,6 +26,7 @@ public class GeneratorUtil {
      */
     public void generate(String path, boolean overwrite) {
 
+        // 存放文件生成的警告相关信息
         List<String> warnings = new ArrayList<>();
         File file = new File(path);
 

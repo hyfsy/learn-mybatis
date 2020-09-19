@@ -94,6 +94,7 @@
     <!-- 使用 resultMap ,将返回结果封装到指定类型对象的指定属性中 -->
     <resultMap id="testUserMax" type="USER">
         <!--
+            在生成的对象没有默认构造方法时使用
             构造函数生成结果对象，此处为 new User(id, name, age)
             3.4.3后，声明顺序可以不与构造函数的参数顺序一致
                 通过name属性指定构造函数的签名参数即可

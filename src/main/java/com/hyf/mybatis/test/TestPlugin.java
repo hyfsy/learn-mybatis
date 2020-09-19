@@ -22,7 +22,7 @@ public class TestPlugin {
             // 查询出两条
             List<User> users = mapper.selectAllUser();
             users.forEach(System.out::println);
-            // 此处的输出很有意思，输出一个Page对象，包含查询数据
+            // 此处的输出很有意思，输出一个Page对象，包含查询数据，该对象继承了 ArrayList，重写了 toString() 方法
             System.out.println(users);
 
             // 查询出所有
