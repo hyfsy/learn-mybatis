@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 名称空间，必须指定为对应接口的全类名 -->
+<mapper namespace="com.hyf.mybatis.mapper.TeacherMapper">
+
+    <!-- 引用其他namespace定义的缓存策略 -->
+    <cache-ref namespace="com.hyf.mybatis.mapper.UserCacheMapper" />
+
+    <!-- 一对一查询使用 -->
+    <select id="selectTeacherById" resultType="Teacher">
+        select * from teacher where t_id = #{tid}
+    </select>
+
+
+    <!-- 测试一对多查询结果注入 -->
+    <resultMap id="testCollection" type="teacher">
+        <id column="t_id" property="tId" />
+        <result column="t_name" property="tName" />
+        <!-- ofType: 指定集合中的对象类型 -->
+        <collection property="userList" ofType="User">
+            <id column="id" property="id" />
+            <result column="name" property="name" />
+            <result column="age" property="age" />
+        </collection>
+    </resultMap>
+
+    <select id="selectTeacherTestCollection" resultMap="testCollection">
+        select t.t_id, t.t_name, u.id, u.name, u.age from teacher t, users u
+        where t_id = u.tid and t_id = #{tid}
+    </select>
+
+
+    <!-- 测试一对多分布查询 -->
+    <resultMap id="testCollectionStep" type="teacher">
+        <id column="t_id" property="tId" />
+        <result column="t_name" property="tName" />
+        <!-- 使用column中的字段值当做参数，传入select中进行查询，查询出来的结果放入property中 -->
+        <!-- 注意: select中必须指定命名空间 + 方法名 -->
+        <collection property="userList" column="t_id"
+                    select="com.hyf.mybatis.mapper.UserMapper.selectUserListByTeacherId" />
+    </resultMap>
+
+    <select id="selectTeacherCollectionStep" resultMap="testCollectionStep">
+        select t_id, t_name from teacher where t_id = #{tid}
+    </select>
+
+
+
+</mapper>

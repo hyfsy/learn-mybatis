@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hyf.mybatis.mapper.EmpMapper">
+
+    <!--oracle无主键插入-->
+    <insert id="insertEmpNoPK" parameterType="com.hyf.mybatis.pojo.Emp" databaseId="oracle">
+--         order(BEFORE/AFTER): 此处为在下一个sql执行之前执行
+--         keyProperty: 获取的结果存放的属性
+--         resultType: 此处为Integer,见Alias
+--         也可以将序列放在主sql语句中，此order设置为 AFTER
+        <selectKey order="BEFORE" keyProperty="empNo" resultType="int">
+            select emp_sequence.nextval from dual
+        </selectKey>
+        insert into emp (empno, ename, job) values(#{empNo}, #{eName}, #{job})
+    </insert>
+
+    <!-- foreach 扩展 -->
+    <!-- oracle批量插入第一种 -->
+    <!--
+        insert into emp (empno, ename, job)
+            select emp_sequence.nextval, ename, job from (
+                select '001' ename,'job1' job from dual
+                union
+                select '002' ename,'job2' job from dual
+           )
+    -->
+    <insert id="insertBatchTestOracle" parameterType="list" databaseId="oracle">
+        insert into emp (empno, ename, job)
+          select emp_sequence.nextval, ename, job from
+              <foreach open="(" separator="union" close=")" collection="list" item="emp">
+                  select #{emp.eName} ename, #{emp.job} job from dual
+              </foreach>
+    </insert>
+
+    <!-- 第二种oracle批量方式：语句用begin end;包含，最后一个语句也要[;] -->
+    <!--
+        begin
+            insert into emp (empno, ename, job) values (emp_sequence.nextval,'测试多插1','多插job1');
+            insert into emp (empno, ename, job) values (emp_sequence.nextval,'测试多插2','多插job3');
+            insert into emp (empno, ename, job) values (emp_sequence.nextval,'测试多插3','多插job4');
+        end;
+    -->
+    <insert id="insertBatchTestOracleTwo" parameterType="list" databaseId="oracle">
+        begin
+        <foreach collection="empList" item="emp">
+            insert into emp (empno, ename, job) values
+            --           此处结尾要加[;]
+            <trim prefix="(" suffix=");" suffixOverrides=",">
+                emp_sequence.nextval,
+                <if test="emp.eName != null and emp.eName.trim() != ''">
+                    #{emp.eName},
+                </if>
+                <if test="emp.job != null and emp.job.trim() != ''">
+                    #{emp.job},
+                </if>
+            </trim>
+        </foreach>
+        --      end结束也要加[;]
+        end;
+    </insert>
+
+
+    <!-- =============================测试oracle存储过程===================================== -->
+
+
+    <resultMap id="testProcedure" type="emp">
+        <id column="empno" property="eNo" />
+        <result column="ename" property="eName" />
+        <result column="job" property="job" />
+    </resultMap>
+
+    <!-- 过期了照样用，其实也可以在#{}中指定 -->
+    <!--<parameterMap id="testProcedureParamMap" type="emp_page">-->
+        <!--<parameter property="startPage" mode="IN" jdbcType="INTEGER" />-->
+        <!--<parameter property="endPage" mode="IN" jdbcType="INTEGER" />-->
+        <!--<parameter property="totalPage" mode="OUT" jdbcType="INTEGER" />-->
+        <!--<parameter property="empList" mode="OUT" javaType="ResultSet" resultMap="testProcedure" />-->
+    <!--</parameterMap>-->
+
+    <!--&lt;!&ndash; 测试存储过程，使用 parameterMap &ndash;&gt;-->
+    <!--<select id="callProcedureSelectEmpListUsePage" parameterMap="testProcedureParamMap" statementType="CALLABLE" databaseId="oracle">-->
+        <!--call emp_split_page_procedure(-->
+            <!--#{startPage},-->
+            <!--#{endPage},-->
+            <!--#{totalPage},-->
+            <!--#{empList}-->
+        <!--)-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash; 测试存储过程，不使用 parameterMap &ndash;&gt;-->
+    <!--<select id="callProcedureSelectEmpListUsePage2" statementType="CALLABLE" databaseId="oracle">-->
+        <!--{call emp_split_page_procedure(-->
+            <!--#{startPage , mode = IN   , jdbcType = INTEGER},-->
+            <!--#{endPage   , mode = IN   , jdbcType = INTEGER},-->
+            <!--#{totalPage , mode = OUT  , jdbcType = INTEGER},-->
+            <!--#{empList   , mode = OUT  , jdbcType = CURSOR, javaType = ResultSet, resultMap = testProcedure}-->
+        <!--)}-->
+    <!--</select>-->
+
+    <select id="callProcedureSelectEmpListUsePage3" resultType="emp_page" statementType="CALLABLE" databaseId="oracle">
+        {call hello_test(
+            #{start , mode = IN   , jdbcType = INTEGER},
+            #{end   , mode = IN   , jdbcType = INTEGER},
+            #{total , mode = OUT  , jdbcType = INTEGER},
+            #{emps  , mode = OUT  , jdbcType = CURSOR, javaType = ResultSet, resultMap = testProcedure}
+        )}
+    </select>
+
+</mapper>

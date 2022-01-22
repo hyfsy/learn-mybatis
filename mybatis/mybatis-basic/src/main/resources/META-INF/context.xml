@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Context>
+<!-- JNDI java naming and directory interface Java命名和目录接口 -->
+<Resource name="jdbc-jndi"
+          type="javax.sql.DataSource"
+          auth="Container"
+          maxActive="20"
+          maxWait="10000"
+          maxIdle="5"
+          username="root"
+          password="hyflearn"
+          driverClassName="com.mysql.cj.jdbc.Driver"
+          url="jdbc:mysql://localhost:3306/learn?serverTimezone=UTC"/>
+
+        <!--
+            数据源名称（随意取）
+            数据源类型
+            效据源提供者
+            最大活动数
+            最大等待时间（秒）
+            最大空闲数
+            用户名
+            密码
+            驱动类
+            连接url
+        -->
+</Context>

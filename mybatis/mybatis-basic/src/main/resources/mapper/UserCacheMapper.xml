@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 名称空间，必须指定为对应接口的全类名 -->
+<mapper namespace="com.hyf.mybatis.mapper.UserCacheMapper">
+    <!--
+        eviction:缓存的回收策略
+            LRU-最近最少使用的:移除最长时间不被使用的对象
+            FIFO-先进先出:按对象进入缓存的顺序来移除它们
+            SOFT-软引用:移除基于垃圾回收器状态和软引用规则的对象
+            WEAK-弱引用:更积极地移除基于垃圾收集器状态和弱引用规则的对象
+            默认的是LRU
+        flushInterval:缓存刷新间隔缓存多长时间清空一次,默认不清空,设置一个毫秒值
+        readonly:是否只读
+            true:只读 mybatis认为所有从缓存中获取数据的操作都是只读操作,不会修改数据。
+                     mybatis为了加快获取速度,直接就会将数据在缓存中的引用交给用户。
+                     不安全,速度快
+            false:非只读 mybatis觉得获取的数据可能会被修改。
+                        mybatis会利用序列化&反序列的技术克隆一份新的数据给你。
+                        安全,速度慢
+        size:缓存存放多少元素
+        type:指定自定义缓存的全类名
+        blocking:（是否使用阻塞缓存）: 默认为false，当指定为true时将采用BlockingCache进行封装，
+                blocking，阻塞的意思，使用BlockingCache会在查询缓存时锁住对应的Key，
+                如果缓存命中了则会释放对应的锁，否则会在查询数据库以后再释放锁这样可以阻止并发情况下多个线程同时查询数据
+    -->
+    <!--<cache eviction="LRU" flushInterval="60000" readOnly="true" size="1024" blocking="false" />-->
+
+    <!-- 使用ehcache缓存 -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+    
+    <select id="testOneCache" resultType="USERCACHE">
+        select * from users where id = #{id}
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 名称空间，必须指定为对应接口的全类名 -->
+<mapper namespace="com.hyf.mybatis.mapper.UserMapper">
+
+    <!-- id，用来指定对应命名空间的接口的方法 -->
+    <!-- sql语句最后的 [;] 可加可不加 -->
+    <select id="selectUserById" resultType="user" databaseId="mysql">
+        select * from users where id = #{id}
+    </select>
+
+    <!-- 测试源码解析标签 -->
+    <select id="selectUserById1" resultType="user" databaseId="mysql">
+        <bind name="idLike" value="'%' + id + '%'"/>
+        select
+        <include refid="user_field" >
+            <property name="userId" value="nb" />
+        </include>
+        from users where id = #{id} and  id = ${asdf}
+        <trim suffixOverrides="and">
+            <if test="id != ''">
+                and id = 23 and
+            </if>
+        </trim>
+        and id = #{idLike};
+    </select>
+
+    <!-- 查询 -->
+    <select id="selectAllUser" resultType="User">
+        select * from users
+    </select>
+
+    <!--插入-->
+    <insert id="insertUser" parameterType="com.hyf.mybatis.pojo.User" databaseId="mysql"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into users (name, age) values(#{name}, #{age})
+    </insert>
+
+    <!--更新-->
+    <update id="updateUser" parameterType="com.hyf.mybatis.pojo.User">
+        update users set name = #{name}, age = #{age} where id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="deleteUserById" parameterType="int">
+        delete from users where id = #{id}
+    </delete>
+
+
+    <!-- ========================测试传参问题======================== -->
+
+
+    <select id="selectUserWithManyParam1" resultType="User">
+        select * from users where id = #{param1} and age =#{param2}
+    </select>
+
+    <select id="selectUserWithManyParam2" resultType="User">
+        select * from users where id = #{id} and age =#{age}
+    </select>
+
+    <select id="selectUserWithManyParam3" resultType="User">
+        select * from users where id = #{id} and age =#{age}
+    </select>
+
+    <select id="selectUserWithManyParam4" resultType="user">
+        select * from users where id = #{id} and age =#{age}
+    </select>
+
+
+    <!-- ========================测试返回参数类型======================== -->
+
+
+    <!-- 返回list集合 -->
+    <select id="selectUserReturnList" resultType="user">
+        select * from users where name like #{name}
+    </select>
+
+    <!-- 返回一条数据的map -->
+    <select id="selectUserReturnMap" resultType="map">
+        select * from users where id like #{asdf}
+    </select>
+
+    <!-- 返回多条指定 K|V 的map -->
+    <select id="selectUserReturnAssignMap" resultType="map">
+        select * from users where name like #{name}
+    </select>
+
+
+    <!-- ========================测试自定义返回参数类型======================== -->
+
+
+    <!-- 使用 resultMap ,将返回结果封装到指定类型对象的指定属性中 -->
+    <resultMap id="testUserMax" type="USER">
+        <!--
+            在生成的对象没有默认构造方法时使用
+            构造函数生成结果对象，此处为 new User(id, name, age)
+            3.4.3后，声明顺序可以不与构造函数的参数顺序一致
+                通过name属性指定构造函数的签名参数即可
+            javaType此处不显示指定也可以
+        -->
+        <!--<constructor>-->
+            <!--<idArg column="uid" javaType="int" name="id" />-->
+            <!--<arg column="user_name" javaType="String" name="name" />-->
+            <!--<arg column="u_age" javaType="int" name="age" />-->
+        <!--</constructor>-->
+        <!--
+            定义主键的封装规则
+            id定义主键，底层会有优化
+            column: 指定数据库哪一列
+            property: 指定java对象的哪一个属性
+         -->
+        <id column="uid" property="id"/>
+        <!-- 定义普通列的封装规则 -->
+        <result column="user_name" property="name"/>
+        <result column="u_age" property="age"/>
+    </resultMap>
+
+    <select id="selectUserUseResultMap" resultMap="testUserMax">
+        select * from user_max where uid = #{id}
+    </select>
+
+    <!-- 使用 . 或 association 获取级联对象 -->
+    <resultMap id="pointSymbolResultMap" type="user">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="t_id" property="teacher.tId"/>
+        <result column="t_name" property="teacher.tName"/>
+        <!--<association property="teacher" javaType="teacher">-->
+        <!--<id column="t_id" property="tId" />-->
+        <!--<result column="t_name" property="tName" />-->
+        <!--</association>-->
+    </resultMap>
+
+    <select id="selectUserUseResultMapByPointSymbol" resultMap="pointSymbolResultMap">
+        select id, name, age, tid, t_id, t_name from users u, teacher t
+         where u.tid = t.t_id and u.id = #{id}
+    </select>
+
+    <!-- 分布查询，获取级联对象 -->
+    <resultMap id="resultMapAssociation" type="user">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <!-- 使用column中的字段值当做参数，传入select中进行查询，查询出来的结果放入property中 -->
+        <!-- 注意: select中必须指定命名空间 + 方法名 -->
+        <association property="teacher" column="tid" fetchType="lazy" select="com.hyf.mybatis.mapper.TeacherMapper.selectTeacherById"/>
+    </resultMap>
+
+    <select id="selectUserUseResultMapAssociation" resultMap="resultMapAssociation">
+        select id, name, age, tid from users where id = #{id}
+    </select>
+
+    <!-- 测试一对多使用 -->
+    <select id="selectUserListByTeacherId" resultType="user">
+        select * from users where tid = #{tid}
+    </select>
+
+    <!-- 测试鉴别器 -->
+    <!-- 如果用户id为1，则查询出其教师信息 -->
+    <!-- 如果用户id为2，则不查询教师信息，但是却将其年龄字段设置为id值 -->
+    <resultMap id="resultMapDiscriminator" type="user">
+        <!-- 默认的属性设置 -->
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <!-- 开始鉴别器设置，指定哪个属性设置鉴别器，并指定类型-->
+        <discriminator column="id" javaType="int">
+            <!-- 如果属性值为1，则走此处 -->
+            <case value="1" resultType="user">
+                <!-- 额外设置其teacher属性，指定类型 -->
+                <association property="teacher" column="tid"
+                             select="com.hyf.mybatis.mapper.TeacherMapper.selectTeacherById"/>
+            </case>
+            <!-- 如果属性值为2，则走此处 -->
+            <case value="2" resultType="user">
+                <id column="id" property="id"/>
+                <result column="name" property="name"/>
+                <!-- 更新其默认属性 -->
+                <result column="id" property="age"/>
+            </case>
+        </discriminator>
+    </resultMap>
+
+    <select id="testResultMapDiscriminator" resultMap="resultMapDiscriminator">
+        select * from users where id = #{id}
+    </select>
+
+
+    <!-- =============================测试动态sql============================= -->
+
+
+    <!-- where if -->
+    <select id="selectUserTestWhere_If" resultType="user">
+        select * from users
+        <where>
+            -- where只会去除前面的多余的[and 或 or]，后面的[and]问题可以使用trim解决
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name.trim() != ''">
+                and name = #{name}
+            </if>
+            <if test="age != null and age &gt; 0">
+                and age = #{age}
+            </if>
+        </where>
+    </select>
+
+    <!-- trim -->
+    <select id="selectUserTestTrim" resultType="user">
+        select * from users
+        -- 为完整的sql添加前缀[where]，去除末尾的[and 或 or]
+        -- 注意！！！：会先走prefix，然后才是prefixOverrides
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="id != null">
+                id = #{id} and
+            </if>
+            <if test="age != null">
+                age = #{age} or
+            </if>
+        </trim>
+    </select>
+
+    <!-- choose when otherwise -->
+    <select id="selectUserTestChoose_When_Otherwise" resultType="user">
+        select * from users
+        <trim prefixOverrides="and" prefix="where">
+            -- 只能选一个
+            <choose>
+                <when test="id != null and id != 0">
+                    id = #{id}
+                </when>
+                <otherwise>
+                    age = #{age}
+                </otherwise>
+            </choose>
+        </trim>
+    </select>
+
+    <!-- set -->
+    <update id="updateUserTestSet" parameterType="user">
+        update users
+        -- set会自动去除后面的多余的[,]，前面的[,]问题可以使用trim解决
+        <set>
+            <if test="name != null and name.trim() != ''">
+                name = #{name},
+            </if>
+            <if test="age != 0">
+                age = #{age},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- foreach -->
+    <select id="selectUserListTestForEach" resultType="user">
+        select * from users where id in
+        -- open 前缀
+        -- separator 每个值之间的分隔符
+        -- close 后缀
+        -- index 遍历list时，就是索引，item是值 ; 遍历map时，就是[K]，item就是[V]
+        -- item 集合中每个值的映射
+        -- collection 集合的映射(自动封装为map的key 为 collection/list)
+        <foreach open="(" separator="," close=")" index="i" item="id" collection="idList">
+            #{id} + #{i}
+        </foreach>
+    </select>
+
+    <!--foreach 扩展-->
+    <!-- 扩展方式: mysql批量插入 -->
+    <!--
+        insert into users (id, name, age) values
+        (21,'多插名称21',21),
+        (22,'多插名称22',22),
+        (23,'多插名称23',23)
+    -->
+    <insert id="insertBatchTestMysql" parameterType="list">
+        insert into users (id, name, age) values
+        <foreach separator="," collection="list" item="user">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="user.id != 0">
+                    #{user.id},
+                </if>
+                <if test="user.name != null and user.name.trim() != ''">
+                    #{user.name},
+                </if>
+                <if test="user.age != 0">
+                    #{user.age},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 或整条语句用[;]分隔，url添加属性 allowMultiQueries=true -->
+    <!--
+        insert into users (id, name, age) values (21,'多插名称21',21);
+        insert into users (id, name, age) values (21,'多插名称21',21);
+    -->
+    <insert id="insertBatchTestMysqlTwo" parameterType="list">
+        <foreach separator=";" collection="list" item="user">
+            insert into users (id, name, age) values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="user.id != 0">
+                    #{user.id},
+                </if>
+                <if test="user.name != null and user.name.trim() != ''">
+                    #{user.name},
+                </if>
+                <if test="user.age != 0">
+                    #{user.age},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 内置参数测试 -->
+    <select id="testInnerParams" resultType="user">
+        -- _databaseId 表示为当前数据库厂商的 我们自己起的别名
+        <if test="_databaseId == 'mysql'">
+            select * from users
+            -- _parameter 单个参数就是本身，多个参数则为 map对象
+            <if test="_parameter != null">
+                where id = #{_parameter}
+            </if>
+        </if>
+        <if test="_databaseId == 'oracle'">
+            select * from emp
+            <if test="_parameter != null">
+                where empno = #{_parameter}
+            </if>
+        </if>
+    </select>
+
+    <!-- bind标签 -->
+    <select id="testLikeBind" resultType="user">
+        <bind name="useLike" value="'%' + name + '%'"/>
+        select * from users where name like #{useLike}
+    </select>
+
+    <!-- 测试sql引用 -->
+
+    <!-- 抽取常用sql -->
+    <sql id="user_field">
+        ${userId}, name, age
+    </sql>
+
+    <!-- 使用include标签引用sql -->
+    <!-- 在include内定义的property能在sql标签中用 ${} 使用 -->
+    <select id="testRefSql" resultType="user">
+        select
+        <include refid="user_field">
+            <property name="userId" value="id"></property>
+        </include>
+        from users
+    </select>
+
+
+    <!-- =============================测试自定义枚举类型转换器============================= -->
+
+    <!-- 测试了解用 -->
+    <!--<resultMap id="testTypeHandlerMap" type="user">-->
+        <!--<result column="activity" property="activity" typeHandler="com.hyf.mybatis.typehandler.EnumTypeHandler" />-->
+    <!--</resultMap>-->
+    <!-- , typeHandler=com.hyf.mybatis.typehandler.EnumTypeHandler -->
+
+    <insert id="testInsertEnumTypeHandler" parameterType="user">
+        insert into users (name, age, activity) values (#{name}, #{age}, #{activity})
+    </insert>
+
+</mapper>

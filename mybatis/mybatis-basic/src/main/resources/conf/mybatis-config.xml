@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 绑定properties文件，方便下方引用 -->
+    <properties resource="jdbc.properties"/>
+
+    <settings>
+        <!-- 映射数据库的字段为驼峰命名 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <!-- 为某一个类起别名 -->
+        <typeAlias type="com.hyf.mybatis.pojo.PageEmp" alias="emp_page"/>
+        <!-- 为整个包下的所有类起别名，如果冲突，可用@Alias注解指定新的别名 -->
+        <package name="com.hyf.mybatis.pojo"/>
+    </typeAliases>
+
+    <!-- 配置自定义类型处理器 -->
+    <!--<typeHandlers>-->
+        <!--&lt;!&ndash; 处理指定java类型时使用指定类型处理器 &ndash;&gt;-->
+        <!--&lt;!&ndash; jdbcType 也可以在处理指定jdbcType时，使用指定处理器 &ndash;&gt;-->
+        <!--&lt;!&ndash; javaType 和 jdbcType 也都可以使用注解的方式配置 &ndash;&gt;-->
+        <!--&lt;!&ndash;<typeHandler handler="com.hyf.mybatis.typehandler.EnumTypeHandler" javaType="com.hyf.mybatis.typehandler.UserStatusEnum"/>&ndash;&gt;-->
+    <!--</typeHandlers>-->
+
+    <!-- 配置自定义对象工厂 -->
+    <objectFactory type="com.hyf.mybatis.objectfactory.CustomObjectFactory" />
+
+    <!-- 注册多个自定义插件 -->
+    <plugins>
+        <!--<plugin interceptor="com.hyf.mybatis.plugin.OrderInterceptor">-->
+        <!--<property name="name" value="orderPlugin" />-->
+        <!--<property name="testValue" value="1" />-->
+        <!--</plugin>-->
+        <!--<plugin interceptor="com.hyf.mybatis.plugin.TestInterceptor" />-->
+
+        <!-- 注册分页插件 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
+    </plugins>
+
+    <!-- default用来切换数据源，为对应环境的id -->
+    <environments default="learn_mysql">
+        <!-- 一个个具体的环境信息，id为当前环境的唯一标识 -->
+        <environment id="learn_mysql">
+            <!-- 事务管理器，type指定使用哪个事务：[JDBC|MANAGED] ——— 这两个都是别名，在Configuration类中可以查看具体类 -->
+            <!--
+                JDBC:这个配置就是直接使用了JDBC的提交和回滚设置，它依赖于从数据源得到的连接来管理事务
+　　　　        MANAGED：这个配置几乎没做什么，它从来不提交和回滚一个连接，而是让容器来管理事务的整个生命周期
+            -->
+            <!-- 自定义事务管理器，分别实现TransactionFactory接口和Transaction接口，type为类的全类名 -->
+            <transactionManager type="JDBC"/>
+            <!-- 数据库连接池，为mybatis自带的，type指定使用什么类型的连接池：[UNPOOLED|POOLED|JNDI] -->
+            <!-- 自定义数据源：实现DataSourceFactory接口，type为类的全类名  -->
+            <!--
+                UNPOOLED: 无数据库连接池 采用传统获取连接的方式，虽然实现了DataSource接口，但没有池的概念
+                POOLED: 有数据库连接池 采用传统的连接池，实现了DataSource接口，MyBatis中有针对的实现
+                JNDI: 自定义数据源 采用服务器提供的JNDI技术支持，比如tomcat服务器采用的就是dbcp连接池
+            -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.mysql.driver}"/>
+                <property name="url" value="${jdbc.mysql.url}"/>
+                <property name="username" value="${jdbc.mysql.username}"/>
+                <property name="password" value="${jdbc.mysql.password}"/>
+            </dataSource>
+            <!-- 定义JNDI数据源 -->
+            <!--<dataSource type="JNDI">-->
+                <!--&lt;!&ndash;-->
+                    <!--name必须指定为data_source，具体看JndiDataSourceFactory的源码-->
+                    <!--value前面的'java:comp/env/'固定，后面为context文件中配置的resource的名称-->
+                <!--&ndash;&gt;-->
+                <!--<property name="data_source" value="java:comp/env/jdbc-jndi" />-->
+            <!--</dataSource>-->
+        </environment>
+        <!-- oracle -->
+        <environment id="learn_oracle">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.oracle.driver}"/>
+                <property name="url" value="${jdbc.oracle.url}"/>
+                <property name="username" value="${jdbc.oracle.username}"/>
+                <property name="password" value="${jdbc.oracle.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 为数据库厂商指定别名 -->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="SQL Server" value="sqlserver"/>
+    </databaseIdProvider>
+
+    <!-- 扫描对应的mapper文件 -->
+    <mappers>
+        <!-- 引入项目路径下，根路径为resources/ -->
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/TeacherMapper.xml"/>
+        <mapper resource="mapper/EmpMapper.xml"/>
+        <mapper resource="mapper/UserCacheMapper.xml"/>
+        <mapper resource="mapper/GeneratorUserMapper.xml"/>
+
+        <!-- 配置注解扫描 -->
+        <mapper class="com.hyf.mybatis.anno.UserAnnMapper" />
+        <mapper class="com.hyf.mybatis.anno.TeacherAnnMapper" />
+        <!-- 通配符匹配 -->
+        <!--<mapper resource="mapper/*.xml"/>-->
+        <!--
+            url: 引入网络或磁盘资源
+            写法：http://localhost:8080/test
+                协议      主机      端口  uri
+
+            URL: Uniform Resource Locator       统一资源定位符
+            URI: Uniform Resource Identifier    统一资源标识符
+         -->
+        <!--<mapper url="file:///E://study/idea2/learn-mybatis/src/main/resources/mapper/UserMapper.xml" />-->
+        <!-- 引入接口文件 -->
+        <!-- 有sql映射文件：接口和xml必须在同一个路径下 -->
+        <!-- 没有sql映射文件：所有sql必须利用注解写在接口中 -->
+        <!--<mapper class="com.hyf.mybatis.mapper.UserMapperAnnotation" />-->
+
+        <!-- 批量注册xml -->
+        <!--<package name="mapper" />-->
+    </mappers>
+</configuration>
